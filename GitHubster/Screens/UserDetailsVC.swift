@@ -27,8 +27,16 @@ class UserDetailsVC: UIViewController {
         configure()
         makeConstraints()
 
+        getUser(by: login)
+    }
+
+    func getUser(by login: String) {
+
+        showLoadingView()
+
         NetworkManager.shared.getUser(by: login) { [weak self] result in
             guard let self = self else { return }
+            self.dismissLoadingView()
             switch result {
             case.success(let userInfo):
                 DispatchQueue.main.async {

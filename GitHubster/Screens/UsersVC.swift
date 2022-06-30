@@ -13,12 +13,15 @@ final class UsersVC: UIViewController {
     private var lastUserID: Int = 0
 
     private let tableView: UITableView = UITableView(frame: .zero)
+    private var pullControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configure()
         makeConstraints()
+
+        configurePullControll()
 
         getUsers(since: lastUserID)
     }
@@ -65,6 +68,16 @@ final class UsersVC: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    fileprivate func configurePullControll() {
+        pullControl.addTarget(self, action: #selector(refreshListData(_:)), for: .valueChanged)
+        tableView.refreshControl = pullControl
+    }
+
+    @objc private func refreshListData(_ sender: Any) {
+        tableView.reloadData()
+        self.pullControl.endRefreshing()
     }
 }
 
